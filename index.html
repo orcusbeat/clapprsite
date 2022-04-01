@@ -1,31 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Page Title</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-</head>
-
-<body>
-    <div id="player"></div>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="j/main.js"></script>
+    <script type="text/javascript" charset="utf-8" src="j/editor/ace.js"></script>
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/bootstrap-theme.min.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/style.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="shortcut icon" type="image/png" href="i/favico.png">
     <script>
-        var playerElement = document.getElementById("player-wrapper");
+      window.clappr = window.clappr || {}
+      window.clappr.externals = []
 
-        var player = new Clappr.Player({
-            source: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
-            disableErrorScreen: true, // Disable the internal error screen plugin
-            exitFullscreenOnEnd: false,
-            autoPlay: true,
-            parentId: "#player",
-            events: {
-                onPlay: function(e) {
-                  setTimeout(function() { player.configure(player.options); }, 10000); //Time in ms
-                }
-            }
+      function addExternal() {
+        var url = document.getElementById('js-link')
+        window.clappr.externals.push(url.value)
+        addTag(url.value)
+        url.value = ''
+      }
+
+      function addTag(url) {
+        var colors = ["aliceblue", "antiquewhite", "azure", "black", "blue", "brown", "yellow", "teal"]
+        var color = colors[Math.floor(Math.random() * colors.length)]
+        var span = document.createElement('span')
+
+        span.style.backgroundColor = color
+        span.className = "external-js"
+        span.innerText = url.split(/\//).pop().split(/\./)[0]
+
+        document.getElementById('external-js-panel').appendChild(span)
+      }
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <span>Cheeks</span>
+    </header>
+    <section class="container">
+      <div class="main">
+        <div id="output">
+          <div id="player-wrapper" class="player"></div>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div id="editor">var playerElement = document.getElementById("player-wrapper");
+
+var player = new Clappr.Player({
+  source: '[enter src here]',
+  disableErrorScreen: true, // Disable the internal error screen plugin
+  exitFullscreenOnEnd: false,
+  autoPlay: true,
+  mute: true,
+  events: {
+    onPlay: function(e) {
+      setTimeout(function() { player.configure(player.options); }, 10000); //Time in ms
+    }
+  }
+});
+
+
+player.attachTo(playerElement);
+</div>
+        <button class="run btn btn-primary">Run</button>
+        <div id="console"> </div>
+      </div>
+    </section>
+    <footer class="footer"></footer>
+    <script>
+      var urlParams;
+      (function() {
+        window.onpopstate = function () {
+          var match,
+              pl     = /\+/g,  // Regex for replacing addition symbol with a space
+              search = /([^&=]+)=?([^&]*)/g,
+              decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+              query  = window.location.search.substring(1);
+
+          urlParams = {};
+          while (match = search.exec(query))
+            urlParams[decode(match[1])] = decode(match[2]);
+        }
+        window.onpopstate();
+      })();
+
+      var playerElement = document.getElementById("player-wrapper");
+
+      var player = new Clappr.Player({
+        source: urlParams.src || 'http://clappr.io/highline.mp4',
+        poster: urlParams.poster || 'http://clappr.io/poster.png',
+        mute: true,
+        height: 360,
+        width: 640
+      });
+
+      player.attachTo(playerElement);
+
+      //editor
+      window.onload = function() {
+
+        if (window.location.hash) {
+          var editorContent = atob(window.location.hash.substr(1))
+          document.getElementById("editor").innerHTML = editorContent
+          setTimeout(run, 0)
+        }
+
+        var editor = ace.edit("editor");
+        var session = editor.getSession();
+
+        editor.setTheme("ace/theme/katzenmilch");
+        session.setMode("ace/mode/javascript");
+        session.setTabSize(2);
+        session.setUseSoftTabs(true);
+
+        var parser = new Parser($('#output'));
+        var load = function(fn) {
+          if (window.clappr.externals.length > 0) {
+            var lastScript = window.clappr.externals.length
+            window.clappr.externals.forEach(function(url, index) {
+	      var script = document.createElement('script')
+
+	      script.setAttribute("type", "text/javascript")
+	      script.setAttribute("src", url)
+              if (index === (lastScript - 1)) {
+		script.onload = fn
+              }
+	      script.onerror = function(e){alert('we cant load ' + url + ': e' + e)}
+
+	      document.body.appendChild(script)
+            })
+	  } else {
+	    fn()
+          }
+        }
+
+        $('.run').click(function() {
+          run()
         });
-        player.attachTo(playerElement);
 
+        function run() {
+          var code = ace.edit('editor').getSession().getValue();
+          var b64EncodedCode = btoa(code)
+          window.location.hash = b64EncodedCode
+          load(function(){parser.parse(code)})
+        }
+      }
     </script>
   </body>
-
 </html>
