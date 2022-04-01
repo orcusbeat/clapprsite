@@ -10,7 +10,6 @@
 <body>
     <div id="player"></div>
     <script>
-      var playerElement = document.getElementById("player-wrapper");
       var player = new Clappr.Player({
         source: 'http://clappr.io/highline.mp4',
         disableErrorScreen: true, // Disable the internal error screen plugin
@@ -22,7 +21,6 @@
             }
         }
       });
-      player.attachTo(playerElement);
     </script>
   </body>
 
