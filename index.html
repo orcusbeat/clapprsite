@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Page Title</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="">
+<style>
+</style>
+<head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+</head>
+<script src=""></script>
+<body>
+
+<img src="img_la.jpg" alt="LA" style="width:100%">
+
+
+
+<body>
+    <div id="player"></div>
+    <script>
+      var playerElement = document.getElementById("player-wrapper");
+
+var player = new Clappr.Player({
+  source: 'XXXXXXXXX',
+  disableErrorScreen: true, // Disable the internal error screen plugin
+  exitFullscreenOnEnd: false,
+  autoPlay: true,
+  events: {
+    onPlay: function(e) {
+      setTimeout(function() { player.configure(player.options); }, 10000); //Time in ms
+    }
+  }
+});
+
+player.attachTo(playerElement);
+    </script>
+  </body>
+
+
+
+<div class="">
+ <h1>This is a Heading</h1>
+ <p>This is a paragraph.</p>
+ <p>This is another paragraph.</p>
+</div>
+
+</body>
+</html>
