@@ -10,23 +10,21 @@
 <body>
     <div id="player"></div>
     <script>
-    var playerElement = document.getElementById("player-wrapper");
-      var player = new Clappr.Player({
-        source: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
-        parentId: "#player",
-        disableErrorScreen: true, // Disable the internal error screen plugin
-        exitFullscreenOnEnd: false,
-<<<<<<< HEAD
-=======
-        autoPlay: true,
->>>>>>> parent of 1841448 (Update index.html)
-        events: {
-            onPlay: function(e) {
-                setTimeout(function() { player.configure(player.options); }, 5000); //Time in ms
+        var playerElement = document.getElementById("player-wrapper");
+
+        var player = new Clappr.Player({
+            source: 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
+            disableErrorScreen: true, // Disable the internal error screen plugin
+            exitFullscreenOnEnd: false,
+            autoPlay: true,
+            events: {
+                onPlay: function(e) {
+                  setTimeout(function() { player.configure(player.options); }, 10000); //Time in ms
+                }
             }
-        }
-      });
-    player.attachTo(playerElement);
+        });
+        player.attachTo(playerElement);
+
     </script>
   </body>
 
