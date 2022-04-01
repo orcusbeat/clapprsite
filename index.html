@@ -10,6 +10,7 @@
 <body>
     <div id="player"></div>
     <script>
+        var playerElement = document.getElementById("player-wrapper");
       var player = new Clappr.Player({
         source: 'http://clappr.io/highline.mp4',
         parentId: "#player",
@@ -24,6 +25,7 @@
             }
         }
       });
+      player.attachTo(playerElement);
     </script>
   </body>
 
