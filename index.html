@@ -17,6 +17,7 @@
             disableErrorScreen: true, // Disable the internal error screen plugin
             exitFullscreenOnEnd: false,
             autoPlay: true,
+            parentId: "#player",
             events: {
                 onPlay: function(e) {
                   setTimeout(function() { player.configure(player.options); }, 10000); //Time in ms
